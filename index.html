@@ -1,1 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我专属的时光 · wvip.top</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-weight: 500;
+            background: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 1.5s ease;
+        }
+
+        body.easter-egg {
+            background: #2d1f0c;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460);
+            z-index: -2;
+            transition: background 1.5s ease;
+        }
+
+        body.easter-egg .bg-gradient {
+            background: linear-gradient(45deg, #3d2b0f, #5c3d1a, #2d1f0c);
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.02) 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            transition: opacity 1.5s ease;
+        }
+
+        body.easter-egg .bg-pattern {
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0 auto 30px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.3s ease, background 1.5s ease;
+        }
+
+        .profile-pic:active {
+            transform: scale(0.95);
+        }
+
+        body.easter-egg .profile-pic {
+            background: linear-gradient(135deg, #c4956a, #8b5e3c);
+        }
+
+        .profile-pic::before {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border-radius: inherit;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(20px);
+            transition: background 1.5s ease;
+        }
+
+        body.easter-egg .profile-pic::before {
+            background: rgba(45, 31, 12, 0.8);
+        }
+
+        .profile-pic span {
+            position: relative;
+            z-index: 1;
+            transition: transform 0.5s ease;
+        }
+
+        body.easter-egg .profile-pic span {
+            transform: scale(1.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.7;
+            font-weight: 500;
+            margin-top: 15px;
+            transition: opacity 1s ease;
+        }
+
+        body.easter-egg .subtitle {
+            opacity: 0.4;
+        }
+
+        .easter-egg-message {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            opacity: 0;
+            color: #c4956a;
+            transition: opacity 1s ease;
+            height: 0;
+            overflow: hidden;
+        }
+
+        body.easter-egg .easter-egg-message {
+            opacity: 0.8;
+            height: auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            transition: transform 0.2s ease, background 0.2s ease, border-color 1.5s ease;
+        }
+
+        body.easter-egg .card {
+            border-color: rgba(196, 149, 106, 0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            opacity: 0.9;
+            transition: color 1.5s ease;
+        }
+
+        body.easter-egg .card-title {
+            color: #c4956a;
+        }
+
+        .countdown-main {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .big-number {
+            font-size: 4rem;
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 1.5s ease;
+        }
+
+        body.easter-egg .big-number {
+            background: linear-gradient(135deg, #c4956a, #e8c97a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .big-label {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .time-units {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .time-unit {
+            flex: 1;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: border-color 1.5s ease;
+        }
+
+        body.easter-egg .time-unit {
+            border-color: rgba(196, 149, 106, 0.2);
+        }
+
+        .time-number {
+            font-size: 1.8rem;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+            transition: color 1.5s ease;
+        }
+
+        body.easter-egg .time-number {
+            color: #e8c97a;
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 18px 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: border-color 1.5s ease;
+        }
+
+        body.easter-egg .stat-item {
+            border-color: rgba(196, 149, 106, 0.2);
+        }
+
+        .stat-number {
+            font-size: 1.6rem;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 8px;
+            transition: color 1.5s ease;
+        }
+
+        body.easter-egg .stat-number {
+            color: #e8c97a;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .progress-section {
+            margin: 25px 0;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: visible;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), background 1.5s ease;
+            position: relative;
+        }
+
+        body.easter-egg .progress-fill {
+            background: linear-gradient(90deg, #c4956a, #e8c97a);
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -4px;
+            width: 1px;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 2;
+            transition: opacity 0.5s ease;
+        }
+
+        .progress-bar.passed-half::after {
+            opacity: 0;
+        }
+
+        .progress-details {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            opacity: 0.7;
+            line-height: 1.5;
+        }
+
+        .age-display {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 500;
+            line-height: 1.4;
+            padding: 20px 0 10px;
+        }
+
+        .today-mood {
+            text-align: center;
+            font-size: 0.75rem;
+            opacity: 0.35;
+            margin-top: 8px;
+            font-style: italic;
+            transition: opacity 1.5s ease;
+            min-height: 20px;
+        }
+
+        body.easter-egg .today-mood {
+            opacity: 0.2;
+            color: #c4956a;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        /* 生命周数 - 精简版 */
+        .week-display {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .week-number {
+            font-size: 2rem;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .week-progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        .week-progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .week-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), background 1.5s ease;
+        }
+
+        body.easter-egg .week-progress-fill {
+            background: linear-gradient(90deg, #c4956a, #e8c97a);
+        }
+
+        /* 页脚 - 流光渐变 */
+        .footer {
+            text-align: center;
+            font-size: 1rem;
+            letter-spacing: 0.08em;
+            margin-top: 40px;
+            font-weight: 500;
+            background: linear-gradient(90deg, #00d2ff, #a78bfa, #f0c060, #a78bfa, #00d2ff);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: footerShimmer 5s ease-in-out infinite;
+        }
+
+        body.easter-egg .footer {
+            background: linear-gradient(90deg, #d4a860, #e8c97a, #f5deb3, #e8c97a, #d4a860);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: footerShimmer 5s ease-in-out infinite;
+        }
+
+        @keyframes footerShimmer {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .big-number {
+                font-size: 3rem;
+            }
+
+            .time-units {
+                flex-wrap: wrap;
+            }
+
+            .time-unit {
+                flex: 0 0 calc(50% - 7.5px);
+                margin-bottom: 15px;
+            }
+
+            .week-number {
+                font-size: 1.5rem;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="profile-pic" id="profilePic" title="双击有惊喜">
+                <span>权</span>
+            </div>
+            <div class="subtitle" id="currentTime"></div>
+            <div class="easter-egg-message" id="easterEggMsg">1999年7月1日，故事开始。</div>
+        </div>
+
+        <div class="grid">
+            <!-- 精确年龄 -->
+            <div class="card">
+                <div class="card-title">精确年龄</div>
+                <div class="age-display" id="exactAge">计算中...</div>
+                <div class="today-mood" id="todayMood">——</div>
+                <div class="time-info">
+                    <span>今年第 <span id="dayOfYear">1</span> 天</span>
+                    <span>本月第 <span id="dayOfMonth">1</span> 天</span>
+                </div>
+            </div>
+
+            <!-- 已活时间 -->
+            <div class="card">
+                <div class="card-title">已活时间</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalMonths">0</span>
+                        <div class="stat-label">月</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalDaysFromHours">0</span>
+                        <div class="stat-label">天</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalHours">0</span>
+                        <div class="stat-label">小时</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalMinutes">0</span>
+                        <div class="stat-label">分钟</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalSeconds">0</span>
+                        <div class="stat-label">秒</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 人生进度 -->
+            <div class="card">
+                <div class="card-title">人生进度</div>
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span>预期60岁</span>
+                        <span id="lifePercentage">0%</span>
+                    </div>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="lifeProgressFill"></div>
+                    </div>
+                    <div class="progress-details">
+                        剩余大约 <span id="remainingYears">0</span> 年<br>
+                        还有 <span id="remainingDays">0</span> 天
+                    </div>
+                </div>
+            </div>
+
+            <!-- 距离生日 -->
+            <div class="card">
+                <div class="card-title">距离生日还有</div>
+                <div class="countdown-main">
+                    <div class="big-number" id="birthdayDays">365</div>
+                    <div class="big-label">
+                        <span id="birthdayText">计算中...</span>
+                        <span id="cake"> 🎂</span>
+                    </div>
+                </div>
+                <div class="time-units">
+                    <div class="time-unit">
+                        <span class="time-number" id="bdDays">0</span>
+                        <div class="time-label">天</div>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-number" id="bdHours">0</span>
+                        <div class="time-label">时</div>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-number" id="bdMinutes">0</span>
+                        <div class="time-label">分</div>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-number" id="bdSeconds">0</span>
+                        <div class="time-label">秒</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 生命周数 - 精简版 -->
+            <div class="card">
+                <div class="card-title">生命周数 · 60岁约3120周</div>
+                <div class="week-display">
+                    <span class="week-number" id="currentWeek">0</span>
+                    <div class="week-progress-header">
+                        <span>你正在度过人生中第 <span id="weekNumber">0</span> 周</span>
+                        <span id="weekPercentage">0%</span>
+                    </div>
+                    <div class="week-progress-bar">
+                        <div class="week-progress-fill" id="weekProgressFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">我专属的时光 · wvip.top</div>
+    </div>
+
+    <script>
+        // ============ 用户配置 ============
+        const BIRTHDAY = new Date('1999-07-01');
+        const LIFE_EXPECTANCY = 60;
+        const WEEKS_EXPECTANCY = 60;
+        const TOTAL_WEEKS = WEEKS_EXPECTANCY * 52;
+        const TIMEZONE_OFFSET = 8 * 60 * 60 * 1000;
+
+        // ============ DOM 元素引用 ============
+        const el = {
+            currentTime: document.getElementById('currentTime'),
+            exactAge: document.getElementById('exactAge'),
+            dayOfYear: document.getElementById('dayOfYear'),
+            dayOfMonth: document.getElementById('dayOfMonth'),
+            totalMonths: document.getElementById('totalMonths'),
+            totalDaysFromHours: document.getElementById('totalDaysFromHours'),
+            totalHours: document.getElementById('totalHours'),
+            totalMinutes: document.getElementById('totalMinutes'),
+            totalSeconds: document.getElementById('totalSeconds'),
+            lifePercentage: document.getElementById('lifePercentage'),
+            lifeProgressFill: document.getElementById('lifeProgressFill'),
+            remainingYears: document.getElementById('remainingYears'),
+            remainingDays: document.getElementById('remainingDays'),
+            birthdayDays: document.getElementById('birthdayDays'),
+            birthdayText: document.getElementById('birthdayText'),
+            cake: document.getElementById('cake'),
+            bdDays: document.getElementById('bdDays'),
+            bdHours: document.getElementById('bdHours'),
+            bdMinutes: document.getElementById('bdMinutes'),
+            bdSeconds: document.getElementById('bdSeconds'),
+            weekNumber: document.getElementById('weekNumber'),
+            weekPercentage: document.getElementById('weekPercentage'),
+            weekProgressFill: document.getElementById('weekProgressFill'),
+            currentWeek: document.getElementById('currentWeek'),
+        };
+
+        // ============ 一言 API（打开即请求 + 每10分钟更新） ============
+        let lastMoodMinute = -1;
+
+        function fetchMood() {
+            fetch('https://v1.hitokoto.cn/')
+                .then(res => res.json())
+                .then(data => {
+                    const moodEl = document.getElementById('todayMood');
+                    if (data.hitokoto) {
+                        moodEl.textContent = '今日状态：' + data.hitokoto;
+                    }
+                })
+                .catch(() => {
+                    // 静默失败
+                });
+        }
+
+        function tryUpdateMood(minute) {
+            const slot = Math.floor(minute / 10);
+            if (slot !== lastMoodMinute) {
+                lastMoodMinute = slot;
+                fetchMood();
+            }
+        }
+
+        // 页面初始加载时获取一次
+        fetchMood();
+
+        // ============ 进度条 50% 临界点 ============
+        function updateHalfMarker(ageInYears) {
+            const bar = document.getElementById('progressBar');
+            const halfAge = LIFE_EXPECTANCY / 2;
+            if (ageInYears >= halfAge) {
+                bar.classList.add('passed-half');
+            } else {
+                bar.classList.remove('passed-half');
+            }
+        }
+
+        // ============ 生命周数更新 ============
+        function updateWeekDisplay(now) {
+            const livedWeeks = Math.floor((now - BIRTHDAY) / (1000 * 60 * 60 * 24 * 7));
+            const weekProgress = (livedWeeks / TOTAL_WEEKS) * 100;
+
+            el.currentWeek.textContent = '第 ' + livedWeeks.toLocaleString() + ' 周';
+            el.weekNumber.textContent = livedWeeks.toLocaleString();
+            el.weekPercentage.textContent = weekProgress.toFixed(1) + '%';
+            el.weekProgressFill.style.width = Math.min(weekProgress, 100) + '%';
+        }
+
+        // ============ 主更新循环 ============
+        function updateTime() {
+            const now = new Date();
+
+            const beijingTime = new Date(now.getTime() + TIMEZONE_OFFSET);
+            const year = beijingTime.getUTCFullYear();
+            const month = beijingTime.getUTCMonth() + 1;
+            const day = beijingTime.getUTCDate();
+            const weekday = ['日', '一', '二', '三', '四', '五', '六'][beijingTime.getUTCDay()];
+            const hours = String(beijingTime.getUTCHours()).padStart(2, '0');
+            const minutes = String(beijingTime.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(beijingTime.getUTCSeconds()).padStart(2, '0');
+
+            el.currentTime.textContent =
+                `${year}年${month}月${day}日 星期${weekday} ${hours}:${minutes}:${seconds}`;
+
+            // 每10分钟更新一言
+            tryUpdateMood(parseInt(minutes));
+
+            // 下次生日
+            let nextBirthday = new Date(Date.UTC(year, 6, 1));
+            const birthdayBeijingTime = new Date(nextBirthday.getTime() + TIMEZONE_OFFSET);
+            if (birthdayBeijingTime <= now) {
+                nextBirthday = new Date(Date.UTC(year + 1, 6, 1));
+            }
+
+            const timeToBirthday = nextBirthday.getTime() - now.getTime();
+            const days = Math.floor(timeToBirthday / (1000 * 60 * 60 * 24));
+            const hoursLeft = Math.floor((timeToBirthday % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutesLeft = Math.floor((timeToBirthday % (1000 * 60 * 60)) / (1000 * 60));
+            const secondsLeft = Math.floor((timeToBirthday % (1000 * 60)) / 1000);
+
+            el.birthdayDays.textContent = days;
+            el.bdDays.textContent = days;
+            el.bdHours.textContent = hoursLeft;
+            el.bdMinutes.textContent = minutesLeft;
+            el.bdSeconds.textContent = secondsLeft;
+
+            if (days === 0 && timeToBirthday > 0) {
+                el.birthdayText.textContent = '今天就是生日！';
+                el.cake.textContent = ' 🎉🎂';
+            } else if (days === 0) {
+                el.birthdayText.textContent = '生日倒计时开始';
+                el.cake.textContent = ' 🎂';
+            } else {
+                el.birthdayText.textContent = days + ' 天后';
+                el.cake.textContent = ' 🎂';
+            }
+
+            // 已活时间
+            const lifeTime = now.getTime() - BIRTHDAY.getTime();
+            const totalMonths = Math.floor(lifeTime / (1000 * 60 * 60 * 24 * 30.44));
+            const totalDaysFromHours = Math.floor(lifeTime / (1000 * 60 * 60 * 24));
+            const totalHours = Math.floor(lifeTime / (1000 * 60 * 60));
+            const totalMinutes = Math.floor(lifeTime / (1000 * 60));
+            const totalSeconds = Math.floor(lifeTime / 1000);
+
+            el.totalMonths.textContent = totalMonths.toLocaleString();
+            el.totalDaysFromHours.textContent = totalDaysFromHours.toLocaleString();
+            el.totalHours.textContent = totalHours.toLocaleString();
+            el.totalMinutes.textContent = totalMinutes.toLocaleString();
+            el.totalSeconds.textContent = totalSeconds.toLocaleString();
+
+            // 精确年龄
+            const ageInYears = lifeTime / (1000 * 60 * 60 * 24 * 365.25);
+            const years = Math.floor(ageInYears);
+            const monthsFloat = (ageInYears % 1) * 12;
+            const months = Math.floor(monthsFloat);
+            const daysFloat = (monthsFloat % 1) * 30.44;
+            const remainingDays = Math.floor(daysFloat);
+            el.exactAge.textContent = `${years}岁 ${months}个月 ${remainingDays}天`;
+
+            // 人生进度条
+            const lifeProgress = (ageInYears / LIFE_EXPECTANCY) * 100;
+            el.lifePercentage.textContent = lifeProgress.toFixed(1) + '%';
+            el.lifeProgressFill.style.width = Math.min(lifeProgress, 100) + '%';
+            updateHalfMarker(ageInYears);
+
+            const remainingYears = Math.max(0, LIFE_EXPECTANCY - ageInYears);
+            const remainingDaysLife = Math.floor(remainingYears * 365.25);
+            el.remainingYears.textContent = remainingYears.toFixed(1);
+            el.remainingDays.textContent = remainingDaysLife.toLocaleString();
+
+            // 今年第几天 & 本月第几天
+            const startOfYear = new Date(Date.UTC(year, 0, 1));
+            const dayOfYear = Math.floor((now.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+            el.dayOfYear.textContent = dayOfYear;
+            el.dayOfMonth.textContent = day;
+
+            // 生命周数
+            updateWeekDisplay(now);
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // ============ 隐藏彩蛋：双击头像 ============
+        let easterEggTimer = null;
+        document.getElementById('profilePic').addEventListener('dblclick', function() {
+            if (document.body.classList.contains('easter-egg')) return;
+
+            document.body.classList.add('easter-egg');
+
+            if (easterEggTimer) clearTimeout(easterEggTimer);
+            easterEggTimer = setTimeout(function() {
+                document.body.classList.remove('easter-egg');
+                easterEggTimer = null;
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
